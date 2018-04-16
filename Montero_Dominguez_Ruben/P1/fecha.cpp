@@ -1,3 +1,7 @@
+#include <cstring>
+#include <ctime>
+#include <cstdio>
+#include <stdexcept>
 #include "fecha.hpp"
 
 static const int meses[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; 

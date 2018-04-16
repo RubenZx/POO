@@ -1,9 +1,7 @@
 #ifndef CADENA_HPP_
 #define CADENA_HPP_
+
 #include <iostream>
-#include <cstring>
-#include <stdexcept>
-#include <iterator>
 
 class Cadena
 {

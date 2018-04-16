@@ -1,3 +1,6 @@
+#include <cstring>
+#include <stdexcept>
+#include <iterator>
 #include "cadena.hpp"
 
 // Constructor

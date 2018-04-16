@@ -1,10 +1,7 @@
 #ifndef FECHA_HPP_
 #define FECHA_HPP_
+
 #include <iostream>
-#include <cstring>
-#include <ctime>
-#include <cstdio>
-#include <stdexcept>
 
 using namespace std;
 

@@ -30,13 +30,11 @@ test-P1-auto: test-caso0-fecha-auto.o test-caso0-cadena-auto.o test-auto.o caden
 
 test-caso0-fecha-auto.o test-caso0-cadena-auto.o test-auto.o: \
 	test-caso0-fecha-auto.cpp test-caso0-cadena-auto.cpp \
-	test-auto.cpp test-auto.hpp fecha.hpp cadena.hpp
+	test-auto.cpp
 
-fecha.o: fecha.cpp fecha.hpp 
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+fecha.o: fecha.cpp
 
-cadena.o: cadena.cpp cadena.hpp
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+cadena.o: cadena.cpp
 
 cadena_check fecha_check: cadena_check.cpp fecha_check.cpp
 	make -f Make_check.mk
