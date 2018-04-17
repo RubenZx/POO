@@ -46,7 +46,7 @@ private:
 	void sustituir_fecha_actual() noexcept;					// Método para cambiar la fecha en el caso en el que tome un valor 0.
 	int bisiesto() noexcept;								// Método para comprobar si un año es bisiesto o no.
 	void validar();											// Método para comprobar si una fecha es válida o no.
-	std::tm* f_sistema() noexcept;							// Método para tomar la fecha actual del sistema.
+	tm* f_sistema() noexcept;							// Método para tomar la fecha actual del sistema.
 
 	int dia_, mes_, anno_;
 };
