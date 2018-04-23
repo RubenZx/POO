@@ -28,7 +28,6 @@ Cadena::Cadena(const Cadena& cad) noexcept
 // Constructor de copia con semantica de movimiento
 Cadena::Cadena(Cadena&& cad) noexcept:s_{cad.s_}, tam_{cad.tam_}
 {
-	// por qué da FAIL*** si ponemos: delete[] cad.s_;
 	cad.s_ = nullptr;
 	cad.tam_ = 0;
 }
@@ -221,7 +220,6 @@ std::istream& operator >>(std::istream& is, Cadena& cad1) noexcept
 
 	while(isspace(is.get()) && is.good()){}
 	is.unget();
-	
 
 	i = 0;
 	while(!(isspace(is.peek())) && i < 32 && is.good())

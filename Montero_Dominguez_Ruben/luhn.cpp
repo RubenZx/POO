@@ -2,7 +2,7 @@
 // Verifica un número de tarjeta empleando el algoritmo de Luhn
 // Referencias: 
 //              http://en.wikipedia.org/wiki/Luhn_algorithm
-//
+
 #include "cadena.hpp"
 #include <cstddef>
 

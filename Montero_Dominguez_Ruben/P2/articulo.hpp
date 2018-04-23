@@ -12,6 +12,7 @@ public:
 	
 	// Constructor de articulo.
 	Articulo(const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p, unsigned num);
+	
 	// Métodos públicos de la clase artículo.
 	Cadena referencia() const;
 	Cadena titulo() const;
