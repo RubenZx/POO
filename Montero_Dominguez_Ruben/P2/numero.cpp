@@ -1,6 +1,5 @@
 #include "numero.hpp"
 
-
 Numero::Numero(const Cadena& cad)
 {
 	Cadena cadaux = cad;

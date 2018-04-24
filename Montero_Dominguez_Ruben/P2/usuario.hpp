@@ -6,7 +6,47 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <utility>
+#include <cstring>
+#include <ctime>
+extern "C" {
+#include <unistd.h>
+}
+
 #include "cadena.hpp"
+#include "numero.hpp"
+#include "articulo.hpp"
+#include "tarjeta.hpp"
+
+/***************************************************** CLASE CLAVE *****************************************************/
+
+class Clave
+{
+public:
+	
+	enum Razon{CORTA, ERROR_CRYPT};
+	
+	Clave(const char* key);
+	Cadena clave() const;
+	bool verifica(const char*);
+
+	class Incorrecta
+	{
+	public:
+		Incorrecta(const Razon r):fallo_{r}{};
+		Razon razon() const;
+	private:
+		Razon fallo_;
+	};
+
+private:
+
+	Cadena passwd_;
+};
+
+inline Cadena Clave::clave() const{return passwd_;}
+inline Razon Clave::Incorrecta::razon() const{return fallo_;}
+
+/***************************************************** CLASE USUARIO0 *****************************************************/
 
 class Usuario
 {
