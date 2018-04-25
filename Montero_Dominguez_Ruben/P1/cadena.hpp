@@ -2,6 +2,7 @@
 #define CADENA_HPP_
 
 #include <iostream>
+#include <functional>
 
 class Cadena
 {
@@ -74,5 +75,19 @@ inline char Cadena::operator[](size_t index)const noexcept{return s_[index];}
 
 inline const size_t Cadena::length() const noexcept{return tam_;}
 inline const char* Cadena::c_str() const noexcept{return s_;}
+
+// Para P2 y ss.
+// Especialización de la plantilla hash<T>para definir la
+// función hash a utilizar con contenedores desordenados de
+// Cadena, unordered_[set|map|multiset|multimap].
+namespace std {
+	template <> struct hash<Cadena> 
+	{
+		size_t operator()(const Cadena& cad) const 	// conversión const char* ->string
+		{											 
+			return hash<string>{}(cad.c_str());
+		}
+	};
+}
 
 #endif // CADENA_HPP_

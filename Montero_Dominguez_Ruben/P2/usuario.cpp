@@ -1,5 +1,4 @@
 #include "usuario.hpp"
-#include <random>
 
 /***************************************************** MÉTODOS DE LA CLASE CLAVE *****************************************************/
 
@@ -37,23 +36,79 @@ Usuario::Usuario(const Cadena& id_user, const Cadena& nombre, const Cadena& apel
 	dir_{dir},
 	passwd_{pass}
 	{
-		std::pair<unordered_set::iterator, bool> aux;	
-		aux = identificadores.insert(id_user);
-
-		if(aux.second == false)
+		if(identificadores.insert(id_user).second == false)
 			throw Id_duplicado(id_user);
 	}
 
 //	Asociar una tarjeta un usuario.
-//	Declaración del map Tarjetas:		typedef std::map<Numero, Tarjeta*> Tarjetas;
-void Usuario::es_titular_de(const Tarjeta& tarj)
+void Usuario::es_titular_de(Tarjeta& tarj)
 {
-	if(tarj.titular() == )
-	tarjetas_.insert(tarj);
+	if(tarj.titular() == this)
+		tarjetas_.insert(std::make_pair(tarj.numero(), &tarj));
 }
 
 //	Desligar una tarjeta de un usuario.
-void Usuario::no_es_titular_de(const Tarjeta& tarj)
+void Usuario::no_es_titular_de(Tarjeta& tarj)
 {
+	if(tarj.titular() == this)
+		tarjetas_.erase(const_cast<Numero&>tarj.numero());	
+}
 
+//	Eliminar las tarjetas, llamando al método Tarjeta::anula_titular();
+Usuario::~Usuario()
+{
+	Tarjetas::iterator iter = tarjetas_.begin();
+	while(!tarjetas_.empty())
+	{
+		iter->second->anula_titular();
+		iter++;
+	}
+	identificadores.erase(id_);
+}
+
+void Usuario::compra(Articulo& art, unsigned cant)
+{
+	if(cant == 0)				//	Sacar artículo del carrito, es decir, eliminar enlace con el articulo.
+		carrito_.erase(art);
+	else 						//	Nueva cantidad del articulo en el carrito.
+		carrito_[&art] = cant;
+}
+
+std::ostream& operator <<(std::ostream& os, const Usuario& user)
+{
+	os 	<< user.id() << " ["
+		<< user.passwd_ << "]"
+		<< user.nombre() << " "
+		<< user.apellidos() << "\n"
+		<< user.direccion() << "\n"
+		<< "Tarjetas:\n"; 
+		
+		Usuario::Tarjetas::iterator iter = user.tarjetas().begin();
+		while(iter != user.tarjetas().end())
+		{
+			os << iter->second;
+			iter++;
+		}
+
+	return os;
+}
+
+std::ostream& mostrar_carro(std::ostream& os, const Usuario& user)
+{
+	Usuario::Articulos articulos = user.compra();
+	Usuario::Articulos::iterator iter = articulos.begin();	
+
+	os 	<< "Carrito de la compra de " << user.id() 
+		<< " [Artículos: " << user.n_articulos() 
+		<< "]\n" << "Cant.  Artículo\n" 
+		<< "===========================================================\n";
+		
+		while(iter != articulos.end())
+		{
+			os << iter->second << "    " << iter->first;
+
+			iter++;
+		}
+
+	return os;
 }

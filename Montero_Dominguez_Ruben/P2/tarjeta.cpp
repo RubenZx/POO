@@ -1,4 +1,3 @@
-#include <cctype>
 #include "tarjeta.hpp"
 
 using namespace std;
@@ -53,7 +52,7 @@ bool Numero::comprobar_digitos(const Cadena& cad)
 
 bool Numero::comprobar_longitud(const Cadena& cad)
 {
-	return(cad.length() >= 13 && cad.length <= 19);
+	return(cad.length() >= 13 && cad.length() <= 19);
 }
 
 bool operator<(const Numero& n1, const Numero& n2)
@@ -63,6 +62,7 @@ bool operator<(const Numero& n1, const Numero& n2)
 
 /***************************************************** MÉTODOS DE LA CLASE TARJETA *****************************************************/
 
+/*
 Cadena Tarjeta::pasar_mayus(const Usuario& user)
 {
 	Cadena cadaux;
@@ -70,26 +70,26 @@ Cadena Tarjeta::pasar_mayus(const Usuario& user)
 	while(i < user.nombre().length() + user.apellidos().length() + 1)
 	{
 		if(i < user.nombre().length())
-			cadaux += toupper(user.nombre()[i]);
+			cadaux += static_cast<char>(toupper(user.nombre()[i]));
 		else
 			if(i == user.nombre().length())
 				cadaux += " ";
 			else
 			{	
-				cadaux += toupper(user.apellidos()[j])
+				cadaux += static_cast<char>(toupper(user.apellidos()[j]));
 				j++;
 			}
 		i++;
 	}
 	return cadaux;		
-}
+}*/
 
-Tarjeta::Tarjeta(Tipo t, const Numero& num, const Usuario& user, const Fecha& fech):
+Tarjeta::Tarjeta(Tipo t, const Numero& num, Usuario& user, const Fecha& fech):
 	tipo_{t},
 	num_{num},
 	user_{nullptr},
 	caducidad_{fech},
-	titular_facial{pasar_mayus(user)}
+	titular_{user.nombre()+" "+user.apellidos()}
 	{
 		if(fech < Fecha())
 			throw Caducada(fech);
@@ -99,7 +99,7 @@ Tarjeta::Tarjeta(Tipo t, const Numero& num, const Usuario& user, const Fecha& fe
 
 std::ostream& operator <<(std::ostream& os, const Tipo& tipo)
 {
-	switch(const_cast<int>(Tarjeta::Tipo::tipo))
+	switch(const_cast<Tarjeta::Tipo>(tipo))
 	{
 		case 0: os << "VISA"; break;
 		case 1: os << "Mastercard"; break;

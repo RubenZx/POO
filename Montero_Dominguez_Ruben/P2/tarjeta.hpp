@@ -1,6 +1,14 @@
 #ifndef TARJETA_HPP_
 #define TARJETA_HPP_
 
+#include <cctype>
+
+#include "cadena.hpp"
+#include "fecha.hpp"
+#include "usuario.hpp"
+
+class Usuario;
+
 /***************************************************** CLASE NUMERO *****************************************************/
 
 bool luhn(const Cadena& numero);
@@ -8,15 +16,15 @@ bool luhn(const Cadena& numero);
 class Numero
 {
 public:
-
 	enum Razon{LONGITUD, DIGITOS, NO_VALIDO};
+	
 	Numero(const Cadena& cad);
 	operator const char*()const{return num_.c_str();};
 
 	class Incorrecto
 	{
 	public:
-		Razon(Razon r): fallo_{r}{};
+		Incorrecto(Razon r): fallo_{r}{};
 		Razon razon() const{return fallo_;};
 	private:
 		Razon fallo_;
@@ -41,7 +49,7 @@ public:
 	enum Tipo{VISA, Mastercard, Maestro, JCB, AmericanExpress};
 	
 	// Constructor, y eliminación de la asignación y la copia.
-	Tarjeta(Tipo t, const Numero& num, const Usuario& user, const Fecha& fech);
+	Tarjeta(Tipo t, const Numero& num, Usuario& user, const Fecha& fech);
 	Tarjeta(const Tarjeta& user) = delete;
 	Tarjeta operator=(const Tarjeta& user) = delete;
 
@@ -49,7 +57,7 @@ public:
 	Tipo tipo() const{return tipo_;};
 	Numero numero() const{return num_;};
 	Fecha caducidad() const{return caducidad_;};
-	Cadena titular_facial() const{return titular_facial;};
+	Cadena titular_facial() const{return titular_;};
 	const Usuario* titular() const{return user_;};
 
 	void anula_titular(){user_ = nullptr;};
@@ -65,13 +73,13 @@ public:
 	};
 
 private:
-	Cadena pasar_mayus(const Usuario& user);
+	// Cadena pasar_mayus(const Usuario& user);
 
 	Tipo tipo_;
 	Numero num_;
-	Usuario *const user_;
+	const Usuario* user_;
 	Fecha caducidad_;
-	Cadena titular_facial;
+	Cadena titular_;
 };
 
 std::ostream& operator <<(std::ostream& os, const Tipo& tipo);
