@@ -58,8 +58,8 @@ void Usuario::no_es_titular_de(Tarjeta& tarj)
 //	Eliminar las tarjetas, llamando al método Tarjeta::anula_titular();
 Usuario::~Usuario()
 {
-	Tarjetas::iterator iter = tarjetas_.begin();
-	while(!tarjetas_.empty())
+	auto iter = tarjetas_.begin();
+	while(iter != tarjetas_.end())
 	{
 		iter->second->anula_titular();
 		iter++;
@@ -96,20 +96,24 @@ std::ostream& operator <<(std::ostream& os, const Usuario& user)
 
 std::ostream& mostrar_carro(std::ostream& os, const Usuario& user)
 {
-	Usuario::Articulos articulos = user.compra();
-	Usuario::Articulos::iterator iter = articulos.begin();	
-
-	os 	<< "Carrito de la compra de " << user.id() 
-		<< " [Artículos: " << user.n_articulos() 
-		<< "]\n" << "Cant.  Artículo\n" 
-		<< "===========================================================\n";
-		
-		while(iter != articulos.end())
-		{
-			os << iter->second << "    " << iter->first;
-
-			iter++;
-		}
-
-	return os;
+  	os 	<< "Carrito de compra de " << user.id() << " [Artículos: "
+     	<< user.n_articulos() << "]" << std::endl;
+    os 	<< " Cant. Artículo" << std::endl
+        << std::setw(95) << std::setfill('=') << '\n'  << std::setfill(' ');
+  	
+  	int tmp = user.n_articulos();
+  	while(tmp > 0)
+  	{
+    	for (auto const& i : user.compra())
+        {
+          	os 	<< std::setw(4) << i.second << "   "
+             	<< "[" << (*i.first).referencia() << "] \""
+             	<< (*i.first).titulo() << "\", " << (*i.first).f_publi().anno()
+             	<< ". " << std::fixed << std::setprecision(2) << (*i.first).precio()
+             	<< " €" << std::endl;
+          	--tmp;
+        }
+  }
+  
+  return os;
 }

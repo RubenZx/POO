@@ -1,58 +1,27 @@
 #include "tarjeta.hpp"
 
-using namespace std;
+#define REMOVE std::remove_if(cad.begin(),cad.end(),[](unsigned char x){return std::isspace(x);})
+#define COUNT std::count_if(cad.begin(), cad.end(), static_cast<int(*)(int)>(std::isdigit))
 
 /***************************************************** MÉTODOS DE LA CLASE NUMERO *****************************************************/
 
-Numero::Numero(const Cadena& cad)
+bool luhn(const Cadena& numero);
+
+Numero::Numero(Cadena cad)
 {
-	Cadena cadaux = cad;
-
-	eliminar_espacios_blancos(cadaux);
-	
-	if(!comprobar_longitud(cadaux))
-		throw Incorrecto(LONGITUD);
-	if(!comprobar_digitos(cadaux))
-		throw Incorrecto(DIGITOS);
-	if(!luhn(cadaux))
-		throw Incorrecto(NO_VALIDO);
-
-	num_ = cadaux;
-}
-
-void Numero::eliminar_espacios_blancos(Cadena& cad)
-{
-	Cadena cadaux;
-	size_t i = 0;
-
-	while(i < cad.length())
-	{
-		if(cad[i] != ' ')
-			cadaux[i] = cad[i];
-		i++;
-	}
-	cad = cadaux;
-}
-
-bool Numero::comprobar_digitos(const Cadena& cad)
-{	
-	bool comprobar = true;
-	size_t i = 0;
-	size_t longitud = cad.length();
-
-	while(i < longitud && comprobar)
-	{
-		if(!isdigit(cad[i])) 
-			comprobar = false;
-		i++;
-	}
-
-	return comprobar;
-}
-
-bool Numero::comprobar_longitud(const Cadena& cad)
-{
-	return(cad.length() >= 13 && cad.length() <= 19);
+  	if(cad.length() == 0) 
+  		throw Incorrecto(Razon::LONGITUD);
+  		
+  	cad = cad.substr(0, REMOVE - cad.begin());
+  
+  	if(COUNT != cad.length()) 
+  		throw Incorrecto(Razon::DIGITOS);
+  	if(cad.length()< 13 || cad.length() > 19) 
+  		throw Incorrecto(Razon::LONGITUD);
+  	if(!luhn(cad))
+  		throw Incorrecto(Razon::NO_VALIDO);
+  
+  num_ = cad;
 }
 
 bool operator<(const Numero& n1, const Numero& n2)
@@ -61,28 +30,6 @@ bool operator<(const Numero& n1, const Numero& n2)
 }
 
 /***************************************************** MÉTODOS DE LA CLASE TARJETA *****************************************************/
-
-/*
-Cadena Tarjeta::pasar_mayus(const Usuario& user)
-{
-	Cadena cadaux;
-	int i = 0, j = 0;
-	while(i < user.nombre().length() + user.apellidos().length() + 1)
-	{
-		if(i < user.nombre().length())
-			cadaux += static_cast<char>(toupper(user.nombre()[i]));
-		else
-			if(i == user.nombre().length())
-				cadaux += " ";
-			else
-			{	
-				cadaux += static_cast<char>(toupper(user.apellidos()[j]));
-				j++;
-			}
-		i++;
-	}
-	return cadaux;		
-}*/
 
 Tarjeta::Tarjeta(Tipo t, const Numero& num, Usuario& user, const Fecha& fech):
 	tipo_{t},
@@ -97,30 +44,36 @@ Tarjeta::Tarjeta(Tipo t, const Numero& num, Usuario& user, const Fecha& fech):
 			user.es_titular_de(*this);
 	}
 
-std::ostream& operator <<(std::ostream& os, Tarjeta::Tipo tipo)
+std::ostream& operator <<(std::ostream& os, const Tarjeta::Tipo& tipo)
 {
 	switch(tipo)
 	{
-		case 0: os << "VISA"; break;
-		case 1: os << "Mastercard"; break;
-		case 2: os << "Maestro"; break;
-		case 3: os << "JCB"; break;
-		case 4: os << "AmericanExpress"; break;
+		case Tarjeta::Tipo::VISA: os << "VISA"; break;
+		case Tarjeta::Tipo::Mastercard: os << "Mastercard"; break;
+		case Tarjeta::Tipo::Maestro: os << "Maestro"; break;
+		case Tarjeta::Tipo::JCB: os << "JCB"; break;
+		case Tarjeta::Tipo::AmericanExpress: os << "AmericanExpress"; break;
 	};
 
 	return os;
 }
 
-std::ostream& operator <<(std::ostream& os, const Tarjeta& tarj)
+std::ostream& operator <<(std::ostream& os,const Tarjeta& tarj)
 {
-	os 	<< tarj.tipo() << "\n" 
-		<< tarj.numero() << "\n"
-		<< tarj.titular_facial() << "\n"
-		<< "Caduca: " << tarj.caducidad().mes() << "/" << tarj.caducidad().anno() % 100 << endl;
-
-	return os;
+ 	os << tarj.tipo() << std::endl;
+  	os << tarj.numero() << std::endl;
+  	os << tarj.titular_facial() << std::endl;
+  	os << "Caduca: " << std::setfill('0') << std::setw(2) << tarj.caducidad().mes()
+       << '/' << std::setw(2) << (tarj.caducidad().anno() % 100);
+  	
+  	return os;
 }
 
+Tarjeta::~Tarjeta()
+{	
+	if(Usuario* us = const_cast<Usuario*>(user_))
+		us->no_es_titular_de(*this);
+}
 
 bool operator<(const Tarjeta& t1, const Tarjeta& t2)
 {

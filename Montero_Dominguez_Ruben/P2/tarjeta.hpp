@@ -2,6 +2,9 @@
 #define TARJETA_HPP_
 
 #include <cctype>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
 
 #include "cadena.hpp"
 #include "fecha.hpp"
@@ -11,31 +14,25 @@ class Usuario;
 
 /***************************************************** CLASE NUMERO *****************************************************/
 
-bool luhn(const Cadena& numero);
-
 class Numero
 {
 public:
 	enum Razon{LONGITUD, DIGITOS, NO_VALIDO};
 	
-	Numero(const Cadena& cad);
+	Numero(Cadena cad);
 	operator const char*()const{return num_.c_str();};
 
 	class Incorrecto
 	{
+		Razon fallo_;
 	public:
 		Incorrecto(Razon r): fallo_{r}{};
-		Razon razon() const{return fallo_;};
-	private:
-		Razon fallo_;
+		Razon razon() const{return fallo_;};	
 	};
 
 	friend bool operator<(const Numero& n1, const Numero& n2); 
 
 private:
-	void eliminar_espacios_blancos(Cadena& cad);
-	bool comprobar_digitos(const Cadena& cad);
-	bool comprobar_longitud(const Cadena& cad);
 	Cadena num_;
 };
 
@@ -62,6 +59,9 @@ public:
 
 	void anula_titular(){user_ = nullptr;};
 
+	// Destructor
+	~Tarjeta();
+
 	class Caducada
 	{
 	public:
@@ -73,7 +73,6 @@ public:
 	};
 
 private:
-	// Cadena pasar_mayus(const Usuario& user);	
 	Tipo tipo_;
 	Numero num_; 	
 	const Usuario* user_;
@@ -81,7 +80,7 @@ private:
 	Cadena titular_;
 };
 
-std::ostream& operator <<(std::ostream& os, Tarjeta::Tipo tipo);
+std::ostream& operator <<(std::ostream& os, const Tarjeta::Tipo& tipo);
 std::ostream& operator <<(std::ostream& os, const Tarjeta& tarj);
 
 bool operator<(const Tarjeta& t1, const Tarjeta& t2);
