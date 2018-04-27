@@ -66,23 +66,22 @@ public:
 	{
 	public:
 		Caducada(const Fecha& f):caducada_{f}{};
-		const Fecha& cuando()const;
+		Fecha cuando()const{return caducada_;};
 
 	private:
 		Fecha caducada_;
 	};
 
 private:
-	// Cadena pasar_mayus(const Usuario& user);
-
+	// Cadena pasar_mayus(const Usuario& user);	
 	Tipo tipo_;
-	Numero num_;
+	Numero num_; 	
 	const Usuario* user_;
 	Fecha caducidad_;
 	Cadena titular_;
 };
 
-std::ostream& operator <<(std::ostream& os, const Tipo& tipo);
+std::ostream& operator <<(std::ostream& os, Tarjeta::Tipo tipo);
 std::ostream& operator <<(std::ostream& os, const Tarjeta& tarj);
 
 bool operator<(const Tarjeta& t1, const Tarjeta& t2);

@@ -42,7 +42,7 @@ bool Numero::comprobar_digitos(const Cadena& cad)
 
 	while(i < longitud && comprobar)
 	{
-		if(!isdigit(cad[i]))
+		if(!isdigit(cad[i])) 
 			comprobar = false;
 		i++;
 	}
@@ -87,19 +87,19 @@ Cadena Tarjeta::pasar_mayus(const Usuario& user)
 Tarjeta::Tarjeta(Tipo t, const Numero& num, Usuario& user, const Fecha& fech):
 	tipo_{t},
 	num_{num},
-	user_{nullptr},
+	user_{&user},
 	caducidad_{fech},
 	titular_{user.nombre()+" "+user.apellidos()}
 	{
-		if(fech < Fecha())
+		if(fech < Fecha()) 
 			throw Caducada(fech);
 		else 
-			user_->es_titular_de(*this);
+			user.es_titular_de(*this);
 	}
 
-std::ostream& operator <<(std::ostream& os, const Tipo& tipo)
+std::ostream& operator <<(std::ostream& os, Tarjeta::Tipo tipo)
 {
-	switch(const_cast<Tarjeta::Tipo>(tipo))
+	switch(tipo)
 	{
 		case 0: os << "VISA"; break;
 		case 1: os << "Mastercard"; break;

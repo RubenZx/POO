@@ -19,7 +19,7 @@ Clave::Clave(const char* key)
 	else throw Incorrecta(ERROR_CRYPT);
 }
 
-bool Clave::verifica(const char* key)
+bool Clave::verifica(const char* key) const
 {
 	if(const char *const pcc = crypt(key, passwd_.c_str())) 
 		return (passwd_ == pcc);
@@ -28,6 +28,7 @@ bool Clave::verifica(const char* key)
 
 /***************************************************** MÉTODOS DE LA CLASE USUARIO *****************************************************/
 
+Usuario::Usuarios Usuario::usuarios_;
 //	Constructor de usuario.
 Usuario::Usuario(const Cadena& id_user, const Cadena& nombre, const Cadena& apell, const Cadena& dir, const Clave& pass):
 	id_{id_user},
@@ -36,8 +37,8 @@ Usuario::Usuario(const Cadena& id_user, const Cadena& nombre, const Cadena& apel
 	dir_{dir},
 	passwd_{pass}
 	{
-		if(identificadores.insert(id_user).second == false)
-			throw Id_duplicado(id_user);
+		if(!usuarios_.insert(id_user).second)
+			throw Id_duplicado(id_);
 	}
 
 //	Asociar una tarjeta un usuario.
@@ -51,7 +52,7 @@ void Usuario::es_titular_de(Tarjeta& tarj)
 void Usuario::no_es_titular_de(Tarjeta& tarj)
 {
 	if(tarj.titular() == this)
-		tarjetas_.erase(const_cast<Numero&>tarj.numero());	
+		tarjetas_.erase(tarj.numero());	
 }
 
 //	Eliminar las tarjetas, llamando al método Tarjeta::anula_titular();
@@ -63,13 +64,13 @@ Usuario::~Usuario()
 		iter->second->anula_titular();
 		iter++;
 	}
-	identificadores.erase(id_);
+	usuarios_.erase(id_);
 }
 
 void Usuario::compra(Articulo& art, unsigned cant)
 {
 	if(cant == 0)				//	Sacar artículo del carrito, es decir, eliminar enlace con el articulo.
-		carrito_.erase(art);
+		carrito_.erase(&art);
 	else 						//	Nueva cantidad del articulo en el carrito.
 		carrito_[&art] = cant;
 }
@@ -77,16 +78,16 @@ void Usuario::compra(Articulo& art, unsigned cant)
 std::ostream& operator <<(std::ostream& os, const Usuario& user)
 {
 	os 	<< user.id() << " ["
-		<< user.passwd_ << "]"
+		<< user.passwd_.clave().c_str() << "]"
 		<< user.nombre() << " "
 		<< user.apellidos() << "\n"
 		<< user.direccion() << "\n"
 		<< "Tarjetas:\n"; 
 		
-		Usuario::Tarjetas::iterator iter = user.tarjetas().begin();
+		auto iter = user.tarjetas().begin();
 		while(iter != user.tarjetas().end())
 		{
-			os << iter->second;
+			os << *iter->second;
 			iter++;
 		}
 

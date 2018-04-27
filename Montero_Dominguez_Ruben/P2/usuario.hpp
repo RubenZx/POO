@@ -18,6 +18,7 @@ extern "C" {
 #include "articulo.hpp"
 #include "tarjeta.hpp"
 
+class Numero;
 class Tarjeta;
 class Articulo;
 
@@ -30,7 +31,7 @@ public:
 	
 	Clave(const char* key);
 	Cadena clave() const{return passwd_;};
-	bool verifica(const char*);
+	bool verifica(const char*) const;
 
 	class Incorrecta
 	{
@@ -51,6 +52,7 @@ class Usuario
 public:
 	typedef std::map<Numero, Tarjeta*> Tarjetas;
 	typedef std::unordered_map<Articulo*, unsigned int> Articulos;
+	typedef std::unordered_set<Cadena> Usuarios;
 
 	// Constructor. Y eliminación de los constructores de copia y asignación
 	Usuario(const Cadena& id_user, const Cadena& nombre, const Cadena& apell, const Cadena& dir, const Clave& pass);
@@ -67,7 +69,7 @@ public:
 	const Articulos& compra() const{return carrito_;};
 	size_t n_articulos() const{return carrito_.size();};
 
-	void compra(Articulo& art, unsigned cant);
+	void compra(Articulo& art, unsigned cant = 1);
 
 	void es_titular_de(Tarjeta& tarj);
 	void no_es_titular_de(Tarjeta& tarj);
@@ -76,7 +78,7 @@ public:
 	{
 		Cadena idDuplicado_;
 	public:
-		Id_duplicado(const Cadena& cad);
+		Id_duplicado(const Cadena& cad):idDuplicado_{cad}{};
 		const Cadena& idd()const{return idDuplicado_;};	
 	};
 
@@ -90,7 +92,7 @@ private:
 	Clave passwd_;
 	Tarjetas tarjetas_;
 	Articulos carrito_;
-	static unordered_set<Cadena> identificadores;
+	static Usuarios usuarios_;
 };
 
 std::ostream& operator <<(std::ostream& os, const Usuario& user);
