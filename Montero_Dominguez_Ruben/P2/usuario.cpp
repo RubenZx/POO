@@ -113,7 +113,7 @@ std::ostream& mostrar_carro(std::ostream& os, const Usuario& user)
              	<< " €" << std::endl;
           	--tmp;
         }
-  }
+  	}
   
-  return os;
+  	return os;
 }
