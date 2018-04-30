@@ -1,8 +1,5 @@
 #include "tarjeta.hpp"
 
-#define REMOVE std::remove_if(cad.begin(),cad.end(),[](unsigned char x){return std::isspace(x);})
-#define COUNT std::count_if(cad.begin(), cad.end(), static_cast<int(*)(int)>(std::isdigit))
-
 /***************************************************** MÉTODOS DE LA CLASE NUMERO *****************************************************/
 
 bool luhn(const Cadena& numero);
@@ -11,17 +8,41 @@ Numero::Numero(Cadena cad)
 {
   	if(cad.length() == 0) 
   		throw Incorrecto(Razon::LONGITUD);
-  		
-  	cad = cad.substr(0, REMOVE - cad.begin());
-  
-  	if(COUNT != cad.length()) 
-  		throw Incorrecto(Razon::DIGITOS);
+	
+	eliminar_espacios(cad);
+	comprobar_digitos(cad);
+
   	if(cad.length()< 13 || cad.length() > 19) 
   		throw Incorrecto(Razon::LONGITUD);
   	if(!luhn(cad))
   		throw Incorrecto(Razon::NO_VALIDO);
   
   num_ = cad;
+}
+
+void Numero::eliminar_espacios(Cadena& cad)
+{
+	Cadena cadaux(cad.length());
+
+	Cadena::iterator i = cad.begin();
+  	size_t j = 0;
+  	while(i != cad.end())
+  	{
+  		if(!isspace(*i))
+  			cadaux[j++] = *i;
+  		i++;
+  	}
+  	cad = cadaux.substr(0, j);
+}
+void Numero::comprobar_digitos(const Cadena& cad)
+{
+	Cadena::const_iterator i = cad.begin();
+  	while(i != cad.end())
+  	{
+  		if(!isdigit(*i))
+  			throw Incorrecto(Razon::DIGITOS);
+  		i++;
+  	}
 }
 
 bool operator<(const Numero& n1, const Numero& n2)

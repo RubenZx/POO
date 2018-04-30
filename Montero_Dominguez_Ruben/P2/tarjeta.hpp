@@ -33,6 +33,8 @@ public:
 	friend bool operator<(const Numero& n1, const Numero& n2); 
 
 private:
+	void eliminar_espacios(Cadena& cad);
+	void comprobar_digitos(const Cadena& cad);
 	Cadena num_;
 };
 
