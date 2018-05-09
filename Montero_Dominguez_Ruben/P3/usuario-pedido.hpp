@@ -1,10 +1,11 @@
 #include <iostream>
+#include "pedido.hpp"
 
 class Usuario_Pedido
 {
 public:
 	typedef std::set<Pedido*> Pedidos;
-	
+
 	void asocia(Usuario& user, Pedido& pedido);
 	void asocia(Pedido& pedido, Usuario& user);
 

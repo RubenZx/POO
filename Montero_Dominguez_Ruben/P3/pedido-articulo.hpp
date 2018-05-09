@@ -1,5 +1,8 @@
 #include <iostream>
 #include <iomanip>
+#include "articulo.hpp"
+
+class Pedido;
 
 class Pedido_Articulo
 {
@@ -22,6 +25,7 @@ public:
 	void pedir(const Articulo& art, const Pedido& ped, double precio, unsigned cant = 1);
 
 	const ItemsPedido& detalle(const Pedido& ped, double prv, unsigned cant);				//	HACER
+	const Pedidos& ventas(const Articulo& art);
 
 private:
 	std::map<Pedido*, ItemsPedido, OrdenaPedidos> directa_;
@@ -41,4 +45,3 @@ private:
 };
 
 std::ostream& operator <<(std::ostream& os, const LineaPedido& linP);
-
