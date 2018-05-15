@@ -2,8 +2,6 @@
 
 /***************************************************** MÉTODOS DE LA CLASE NUMERO *****************************************************/
 
-// Hacerlo mediante remove_if y find_if
-
 bool luhn(const Cadena& numero);
 
 Numero::Numero(Cadena cad)
@@ -11,40 +9,20 @@ Numero::Numero(Cadena cad)
   	if(cad.length() == 0)
   		throw Incorrecto(Razon::LONGITUD);
 
-	eliminar_espacios(cad);
-	comprobar_digitos(cad);
+  	// Eliminar espacios en blanco.
+  	cad = std::remove_if(cad.begin(), cad.end(), EsBlanco);
+
+  	// Comprobar digitos.
+  	if(std::find_if(cad.begin(), cad.end(), not1(EsDigito)))
+  		throw Incorrecto(Razon::DIGITOS);
 
   	if(cad.length()< 13 || cad.length() > 19)
   		throw Incorrecto(Razon::LONGITUD);
   	if(!luhn(cad))
   		throw Incorrecto(Razon::NO_VALIDO);
 
-  num_ = cad;
-}
+  	num_ = cad;
 
-void Numero::eliminar_espacios(Cadena& cad)
-{
-	Cadena cadaux(cad.length());
-
-	Cadena::iterator i = cad.begin();
-  	size_t j = 0;
-  	while(i != cad.end())
-  	{
-  		if(!isspace(*i))
-  			cadaux[j++] = *i;
-  		i++;
-  	}
-  	cad = cadaux.substr(0, j);
-}
-void Numero::comprobar_digitos(const Cadena& cad)
-{
-	Cadena::const_iterator i = cad.begin();
-  	while(i != cad.end())
-  	{
-  		if(!isdigit(*i))
-  			throw Incorrecto(Razon::DIGITOS);
-  		i++;
-  	}
 }
 
 bool operator<(const Numero& n1, const Numero& n2)

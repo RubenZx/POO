@@ -1,5 +1,13 @@
+#ifndef USUARIO_PEDIDO_HPP
+#define USUARIO_PEDIDO_HPP
+
 #include <iostream>
-#include "pedido.hpp"
+#include <set>
+#include <map>
+#include <utility>
+
+class Usuario;
+class Pedido;
 
 class Usuario_Pedido
 {
@@ -9,33 +17,23 @@ public:
 	void asocia(Usuario& user, Pedido& pedido);
 	void asocia(Pedido& pedido, Usuario& user);
 
-	const Pedidos& pedidos(Usuario& user) const;
-	const Usuario* cliente(Pedido& pedido) const;
+	const Pedidos& pedidos(Usuario& user) {return directa_[&user];}
+	const Usuario* cliente(Pedido& pedido) {return inversa_[&pedido];}
 
 private:
 	std::map<Usuario*, Pedidos> directa_;
 	std::map<Pedido*, Usuario*> inversa_;
 };
 
-void Usuario_Pedido::asocia(Usuario& user, Pedido& pedido)
+inline void Usuario_Pedido::asocia(Usuario& user, Pedido& pedido)
 {
 	directa_[&user].insert(&pedido);
 	inversa_[&pedido] = &user;
 }
 
-void Usuario_Pedido::asocia(Pedido& pedido, Usuario& user)
+inline void Usuario_Pedido::asocia(Pedido& pedido, Usuario& user)
 {
 	asocia(user, pedido);
 }
 
-const Usuario_Pedido::Pedidos& Usuario_Pedido::pedidos(Usuario& user) const
-{
-	if(!directa_.find(&user).second) return Pedidos();
-	else return directa_[&user];
-}
-
-const Usuario* Usuario_Pedido::cliente(Pedido& pedido) const
-{
-	if(!inversa_.find(&pedido).second) return nullptr;
-	else return inversa_[&pedido];
-}
+#endif 	// 	USUARIO_PEDIDO_HPP

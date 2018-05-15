@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <functional>
 
 #include "cadena.hpp"
 #include "fecha.hpp"
@@ -30,15 +31,14 @@ public:
 		Razon razon() const{return fallo_;};
 	};
 
-	// COMPLETAR
 	class EsBlanco{
   	public:
-  		bool operator()(const Numero& num) {return ;}
+  		bool operator()(char c) {return isspace(c);}
 	};
 
 	class EsDigito{
   	public:
-  		bool operator()(const Numero& num) {return ;}
+  		bool operator()(char c) {return isdigit(c);}
 	};
 
 	friend bool operator<(const Numero& n1, const Numero& n2);

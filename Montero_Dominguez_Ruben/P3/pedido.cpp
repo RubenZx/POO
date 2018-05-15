@@ -1,4 +1,6 @@
 #include "pedido.hpp"
+#include "pedido-articulo.hpp"
+#include "usuario-pedido.hpp"
 
 int Pedido::N_pedidos = 0; 	//contador de pedidos
 
@@ -6,9 +8,9 @@ int Pedido::N_pedidos = 0; 	//contador de pedidos
 Pedido::Pedido(Usuario_Pedido& us_pe, Pedido_Articulo& pe_art, Usuario& u, const Tarjeta& t, const Fecha& fp)
 	:num_(N_pedidos + 1), tarjeta_(&t), fecha_(fp), total_(0)
 {
-	if(u.n_articulos() == 0) throw Vacio(u); 	                       //Carrito vacio
-	if(t.titular() != &u) throw Impostor(u);                         //Tarjeta robada
-	if(t.caducidad() < fp) throw Tarjeta::Caducada(t.caducidad()); 	 //Tarjeta caducada
+	if(u.n_articulos() == 0) throw Vacio(u); 	                		//Carrito vacio
+	if(t.titular() != &u) throw Impostor(u);                         	//Tarjeta robada
+	if(t.caducidad() < fp) throw Tarjeta::Caducada(t.caducidad()); 	 	//Tarjeta caducada
 
 	for(auto c : u.compra())   //c es pair<Articulo*, unisgned (cantidad)>, Comprobamos que haya stock para los articulos.
 	{
@@ -48,6 +50,10 @@ Importe: 149,95 €
 */
 std::ostream& operator <<(std::ostream& os, const Pedido& ped)
 {
-  os << "Núm. pedido: " << ped.numero() << "\nFecha: " << ped.fecha() << "\nPagado con: " << ped.tarjeta() << "\nImporte: " << ped.total() << " €" << std::endl;
-  return os;
+  	os 	<< "Núm. pedido: " << ped.numero() 
+  		<< "\nFecha: " << std::setfill(' ') << std::setw(6) << ped.fecha() 	
+  		<< "\nPagado con:  " << ped.tarjeta() 
+  		<< "\nImporte: " << std::setfill(' ') << std::setw(4) << ped.total() << " €" << std::endl;
+  
+  	return os;
 }
