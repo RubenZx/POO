@@ -17,6 +17,8 @@ std::ostream& Pedido_Articulo::mostrarDetallePedidos(std::ostream& os)
 {
 	double toti = 0.0;
 
+	// iter->first  <=> Pedido*
+	// iter->second <=> ItemsPedido
 	for(auto iter = directa_.begin(); iter != directa_.end(); iter++)
 	{
 		os 	<< "Pedido núm. " << (iter->first)->numero() << "\n"
@@ -31,6 +33,8 @@ std::ostream& Pedido_Articulo::mostrarDetallePedidos(std::ostream& os)
 
 std::ostream& Pedido_Articulo::mostrarVentasArticulos(std::ostream& os)
 {
+	// iter->first  <=> Articulo*
+	// iter->second <=> Pedidos
 	for(auto iter = inversa_.begin(); iter != inversa_.end(); iter++)
 	{
 		os 	<< "Ventas de [" << (iter->first)->referencia() << "]  " << "\"" 
@@ -47,6 +51,8 @@ std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::ItemsPedido& 
 
 	os 	<< " PVP\tCantidad\t\tArtículo\n" << Cadena(80, '=') << std::endl;
 
+	// iter->first  <=> Articulo*
+	// iter->second <=> LineaPedido
 	for(auto iter = items.begin(); iter != items.end(); iter++)
 	{
 		os 	<< std::fixed << std::setprecision(2) << (iter->first)->precio() << " €\t" 
@@ -70,7 +76,7 @@ std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::Pedidos& peds
 		<< "  PVP\tCantidad\tFecha de venta\n"
 		<< Cadena(80, '=') << std::endl;
 
-	// iter->first  <=> Articulo*
+	// iter->first  <=> Pedido*
 	// iter->second <=> LineaPedido
 	for(auto iter = peds.begin(); iter != peds.end(); iter++)
 	{
