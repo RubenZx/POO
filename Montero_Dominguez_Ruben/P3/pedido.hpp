@@ -38,11 +38,12 @@ public:
   {
     Articulo* art_;
   public:
-    SinStock(Articulo* art):art_(art){};
+    SinStock(Articulo& art):art_(&art){};
     Articulo& articulo() const {return *art_;}
   };
 
   // Métodos observadores.
+  static int n_total_pedidos() {return N_pedidos;}
   int numero() const{return num_;}
   const Tarjeta* tarjeta() const {return tarjeta_;}
   Fecha fecha() const{return fecha_;}

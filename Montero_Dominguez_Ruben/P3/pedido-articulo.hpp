@@ -27,14 +27,14 @@ std::ostream& operator <<(std::ostream& os, const LineaPedido& linP);
 
 /***************************************************** CLASE PEDIDO_ARTICULO *****************************************************/
 
-class OrdenaPedidos{
-public:
-	bool operator()(const Pedido* ped1, const Pedido* ped2) {return ped1->numero() < ped2->numero();}
+struct OrdenaPedidos: public std::binary_function <Pedido*,Pedido*,bool>
+{
+	bool operator()(const Pedido* ped1, const Pedido* ped2) const {return ped1->numero() < ped2->numero();}
 };
 
-class OrdenaArticulos{
-public:
-	bool operator()(const Articulo* art1, const Articulo* art2){return art1->referencia() < art2->referencia();}
+struct OrdenaArticulos: public std::binary_function<Articulo*,Articulo*,bool>
+{
+	bool operator()(const Articulo* art1, const Articulo* art2) const {return art1->referencia() < art2->referencia();}
 };
 
 class Pedido_Articulo
@@ -45,13 +45,12 @@ public:
 	typedef std::map<Pedido*, LineaPedido, OrdenaPedidos> Pedidos;
 
 	// Métodos:
-	void pedir(const Pedido& ped, const Articulo& art, double precio, unsigned cant = 1);
-	void pedir(const Articulo& art, const Pedido& ped, double precio, unsigned cant = 1);
+	void pedir(Pedido& ped, Articulo& art, double precio, unsigned cant = 1);
+	void pedir(Articulo& art, Pedido& ped, double precio, unsigned cant = 1);
 
 	ItemsPedido& detalle(Pedido& ped){return directa_[&ped];}
 	Pedidos ventas(Articulo& art){return inversa_[&art];}
 
-	//	HACER
 	std::ostream& mostrarDetallePedidos(std::ostream& os);
 	std::ostream& mostrarVentasArticulos(std::ostream& os);
 
@@ -60,7 +59,6 @@ private:
 	std::map<Articulo*, Pedidos, OrdenaArticulos> inversa_;		// Asociación artículo a pedido
 };
 
-//	HACER
 std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::ItemsPedido& items);
 std::ostream& operator <<(std::ostream& os, const Pedido_Articulo::Pedidos& peds);
 

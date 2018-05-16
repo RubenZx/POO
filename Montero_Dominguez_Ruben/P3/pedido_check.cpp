@@ -142,7 +142,7 @@ int main(int argc, const char **argv){
                 vector<vector<string> > methodsParams;
                 methodsParams = {params};
                 
-		c5.defaultArgumentsInMethod({"LineaPedido"}, methodsParams, "LineaPedido", {"?"}, {1}, {{"1.*"}}, "Revisa el enunciado respecto a la construcción de objetos.");
+		c5.defaultArgumentsInMethod({"LineaPedido"}, methodsParams, "LineaPedido", {"?"}, {1}, {{"1"}}, "Revisa el enunciado respecto a la construcción de objetos.");
 
                 c5.explicitSpecifiedConstructor("LineaPedido", params, "Revisa el enunciado respecto a conversiones implícitas.");
 

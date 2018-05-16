@@ -1,8 +1,8 @@
 #ifndef TARJETA_HPP_
 #define TARJETA_HPP_
 
-#include <cctype>
 #include <iostream>
+#include <cctype>
 #include <algorithm>
 #include <iomanip>
 #include <functional>
@@ -12,6 +12,17 @@
 #include "usuario.hpp"
 
 class Usuario;
+
+struct EsBlanco: std::unary_function<char, bool>
+{
+	bool operator()(unsigned char c) const {return std::isspace(c);}
+};
+
+struct EsDigito: std::unary_function<char, bool>
+{
+	bool operator()(unsigned char c) const {return std::isdigit(c);}
+};
+
 
 /***************************************************** CLASE NUMERO *****************************************************/
 
@@ -29,16 +40,6 @@ public:
 	public:
 		Incorrecto(Razon r): fallo_{r}{};
 		Razon razon() const{return fallo_;};
-	};
-
-	class EsBlanco{
-  	public:
-  		bool operator()(char c) {return isspace(c);}
-	};
-
-	class EsDigito{
-  	public:
-  		bool operator()(char c) {return isdigit(c);}
 	};
 
 	friend bool operator<(const Numero& n1, const Numero& n2);

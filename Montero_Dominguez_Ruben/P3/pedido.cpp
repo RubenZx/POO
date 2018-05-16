@@ -6,7 +6,7 @@ int Pedido::N_pedidos = 0; 	//contador de pedidos
 
 // Constructor de pedido.
 Pedido::Pedido(Usuario_Pedido& us_pe, Pedido_Articulo& pe_art, Usuario& u, const Tarjeta& t, const Fecha& fp)
-	:num_(N_pedidos + 1), tarjeta_(&t), fecha_(fp), total_(0)
+	:num_(N_pedidos + 1), total_(0), tarjeta_(&t), fecha_(fp)
 {
 	if(u.n_articulos() == 0) throw Vacio(u); 	                		//Carrito vacio
 	if(t.titular() != &u) throw Impostor(u);                         	//Tarjeta robada
@@ -52,7 +52,8 @@ std::ostream& operator <<(std::ostream& os, const Pedido& ped)
 {
   	os 	<< "Núm. pedido: " << ped.numero() 
   		<< "\nFecha: " << std::setfill(' ') << std::setw(6) << ped.fecha() 	
-  		<< "\nPagado con:  " << ped.tarjeta() 
+  		<< "\nPagado con:  " << ped.tarjeta()->tipo() 
+  		<< "\n N.º: " << ped.tarjeta()->numero()
   		<< "\nImporte: " << std::setfill(' ') << std::setw(4) << ped.total() << " €" << std::endl;
   
   	return os;

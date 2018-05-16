@@ -10,10 +10,10 @@ Numero::Numero(Cadena cad)
   		throw Incorrecto(Razon::LONGITUD);
 
   	// Eliminar espacios en blanco.
-  	cad = std::remove_if(cad.begin(), cad.end(), EsBlanco);
+  	cad = cad.substr(0, std::remove_if(cad.begin(), cad.end(), EsBlanco()) - cad.begin());
 
   	// Comprobar digitos.
-  	if(std::find_if(cad.begin(), cad.end(), not1(EsDigito)))
+  	if(std::find_if(cad.begin(), cad.end(), not1(EsDigito())) != cad.end())
   		throw Incorrecto(Razon::DIGITOS);
 
   	if(cad.length()< 13 || cad.length() > 19)
@@ -24,6 +24,38 @@ Numero::Numero(Cadena cad)
   	num_ = cad;
 
 }
+
+/*
+CODIGO DE LUIS
+Cadena Numero::quitarEspacios(const Cadena& cad)
+{
+	Cadena aux(cad);
+	std::remove_if(aux.begin(),aux.end()+1,[](unsigned char x){return std::isspace(x);});
+	return Cadena(aux.c_str());
+}
+
+
+Numero::Numero(const Cadena& num)
+{
+
+	if(num.length() == 0)
+		throw Incorrecto(Razon::LONGITUD);
+
+	Cadena aux = quitarEspacios(num);
+
+	//if(find_if(aux.begin(), aux.end(), not1(EsDigito)) != aux.end()) 
+	if( count_if(aux.begin(), aux.end(), static_cast<int(*)(int)>(isdigit)) != aux.length())
+		throw Incorrecto(Razon::DIGITOS);
+
+	if(aux.length() < 13 || aux.length() > 19)  		  //comprobar la longuitud
+		throw Incorrecto(Razon::LONGITUD);
+
+	if(!luhn(aux))						  //comprovar la validez
+		throw Incorrecto(Razon::NO_VALIDO);
+
+	num_ = aux;
+}
+*/
 
 bool operator<(const Numero& n1, const Numero& n2)
 {

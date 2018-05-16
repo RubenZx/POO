@@ -7,7 +7,6 @@
 #include "fecha.hpp"
 
 class Articulo{
-	
 public:
 	// Constructor de articulo.
 	Articulo(const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p, unsigned num);
