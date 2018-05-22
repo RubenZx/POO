@@ -5,7 +5,15 @@
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
+#include <cstring>
+#include <ctime>
+#include <random>
+extern "C" {
+#include <unistd.h>
+}
 
+#include "fecha.hpp"
 #include "cadena.hpp"
 #include "articulo.hpp"
 #include "tarjeta.hpp"

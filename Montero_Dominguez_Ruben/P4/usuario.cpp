@@ -1,14 +1,5 @@
-#include <cstring>
-#include <random>
-#include <iomanip>
-
-extern "C" {
-#include <unistd.h>
-}
-
 #include "usuario.hpp"
 
-using namespace std;
 /***************************************************** MÉTODOS DE LA CLASE CLAVE *****************************************************/
 
 Clave::Clave(const char* key)
@@ -17,11 +8,12 @@ Clave::Clave(const char* key)
 	
   	static const char *const cv = "./0123456789"
   	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  	static const size_t longtd = sizeof(cv) - 1;					// "size_t" es el tipo que devuelva "sizeof".
 
   	static std::random_device r;
-  	static std::uniform_int_distribution<std::size_t> distribucion(0, 63);		//	"distribución", objeto función.
+  	static std::uniform_int_distribution<size_t> distribucion(0, longtd - 1);		//	"distribución", objeto función.
 
-	const char salt[] = {cv[distribucion(r)], cv[distribucion(r)]};
+  	const char salt[] = {cv[distribucion(r)], cv[distribucion(r)]};
   		
   	if(const char *const pcc = crypt(key, salt)) passwd_ = pcc;  		
 	else throw Incorrecta(ERROR_CRYPT);
