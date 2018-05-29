@@ -31,9 +31,10 @@ public:
 	Articulo(const Autores& autores, const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p);
 	
 	// Métodos públicos de la clase artículo.
-	Cadena referencia() const{return ref_code_;}
-	Cadena titulo() const{return titulo_;}
-	Fecha f_publi() const{return f_publicacion_;}
+	const Cadena& referencia() const{return ref_code_;}
+	const Cadena& titulo() const{return titulo_;}
+	const Fecha& f_publi() const{return f_publicacion_;}
+	const Autores& autores() const{return autores_;}
 	double precio() const{return precio_;}
 	double& precio(){return precio_;}
 	
@@ -41,7 +42,8 @@ public:
 	//unsigned stock() const{return num_ejemplares_;}
 	//unsigned& stock(){return num_ejemplares_;}
 
-	virtual void impresion_especifica(std::ostream& os) = 0;
+	virtual void impresion_especifica(std::ostream& os)const = 0;
+	virtual ~Articulo(){}
 
 private:
 	Cadena ref_code_, titulo_;
@@ -51,13 +53,16 @@ private:
 	const Autores autores_;
 };
 
-inline Articulo::Articulo(const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p):
-	autores_{autores},
+inline Articulo::Articulo(const Autores& autores, const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p):
 	ref_code_{ref},
 	titulo_{titulo}, 
 	f_publicacion_{fecha}, 
-	precio_{p}{}
-
+	precio_{p},
+	autores_{autores}
+	{
+		if(autores_.size() == 0)
+			throw Autores_vacios();
+	}
 
 std::ostream& operator <<(std::ostream& os, const Articulo& art);
 
@@ -65,25 +70,26 @@ class ArticuloAlmacenable: public Articulo
 {
 public:
 	ArticuloAlmacenable(const Autores& autores, const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p, unsigned num_ejemp = 0)
-		: Articulo(autores, ref, titulo, fecha, p), num_ejemplares_(num_ejemp){}
+		: Articulo(autores, ref, titulo, fecha, p), stock_(num_ejemp){}
 
-	unsigned stock() const{return num_ejemplares_;}
-	unsigned& stock(){return num_ejemplares_;}
+	unsigned stock() const{return stock_;}
+	unsigned& stock(){return stock_;}
 
-private:
-	unsigned num_ejemplares_;
+protected:
+	unsigned stock_;
 };
 
 class Libro: public ArticuloAlmacenable
 {
 public:
 	Libro(const Autores& autores, const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p, unsigned num_pags, unsigned num_ejemp = 0)
-		: ArticuloAlmacenable(autores, ref, titulo, fecha, p, num_ejemp), num_paginas_(num_pags){}
+		: ArticuloAlmacenable(autores, ref, titulo, fecha, p, num_ejemp), n_pag_(num_pags){}
 
-	unsigned n_pag() const{return num_paginas_;}
+	unsigned n_pag() const{return n_pag_;}
+	void impresion_especifica(std::ostream& os) const{os << n_pag_ << " págs., " << stock_ << " unidades.";}
 
 private:
-	const unsigned num_paginas_;
+	const unsigned n_pag_;
 };
 
 class Cederron: public ArticuloAlmacenable
@@ -93,9 +99,23 @@ public:
 		: ArticuloAlmacenable(autores, ref, titulo, fecha, p, num_ejemp), tam_(tam){}
 
 	unsigned tam() const{return tam_;}
+	void impresion_especifica(std::ostream& os) const{os << tam_ << " MB, " << num_ejemplares_ << " unidades.";}
 
 private:
 	const unsigned tam_;
+};
+
+class LibroDigital: public Articulo
+{
+public:
+	LibroDigital(const Autores& autores, const Cadena& ref, const Cadena& titulo, const Fecha& fecha, double p, const Fecha& fexpr)
+		: Articulo(autores, ref, titulo, fecha, p), f_expir_(fexpr){}
+	const Fecha& f_expir() const{return f_expir_;};
+	void impresion_especifica(std::ostream& os) const{os << "A la venta hasta el " << f_expir_ << ".";}
+
+private:
+	const Fecha f_expir_;
+
 };
 
 #endif // ARTICULO_HPP_

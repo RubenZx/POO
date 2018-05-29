@@ -215,7 +215,7 @@ ostream& operator <<(ostream& os, const Fecha& f1)
 
 istream& operator >>(istream& is, Fecha& f1)
 {
-	char* fecha = new char[11];	
+	char fecha[11];	
 	is.getline(fecha, 11);
 
 	try{
@@ -226,6 +226,5 @@ istream& operator >>(istream& is, Fecha& f1)
 		throw e;
 	}
 	
-	delete []fecha;
 	return is;
 }
