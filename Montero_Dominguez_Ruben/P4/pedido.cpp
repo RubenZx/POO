@@ -58,7 +58,7 @@ std::ostream& operator <<(std::ostream& os, const Pedido& ped)
   	os 	<< "Núm. pedido: " << ped.numero() 
   		<< "\nFecha: " << std::setfill(' ') << std::setw(6) << ped.fecha() 	
   		<< "\nPagado con:  " << ped.tarjeta()->tipo() 
-  		<< "\n N.º: " << ped.tarjeta()->numero()
+  		<< " n.º: " << ped.tarjeta()->numero()
   		<< "\nImporte: " << std::setfill(' ') << std::setw(4) << ped.total() << " €" << std::endl;
   
   	return os;
