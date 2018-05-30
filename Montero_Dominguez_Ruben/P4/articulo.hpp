@@ -12,9 +12,9 @@ public:
 	Autor(const Cadena& nombre, const Cadena& apellidos, const Cadena& direccion) noexcept
 		: nombre_(nombre), apellidos_(apellidos), direccion_(direccion){}
 
-	const Cadena& nombre() const{return nombre_;}
-	const Cadena& apellidos() const{return apellidos_;}
-	const Cadena& direccion() const{return direccion_;}
+	const Cadena& nombre() const noexcept{return nombre_;}
+	const Cadena& apellidos() const noexcept{return apellidos_;}
+	const Cadena& direccion() const noexcept{return direccion_;}
 
 private:
 	Cadena nombre_, apellidos_, direccion_;
@@ -99,7 +99,7 @@ public:
 		: ArticuloAlmacenable(autores, ref, titulo, fecha, p, num_ejemp), tam_(tam){}
 
 	unsigned tam() const{return tam_;}
-	void impresion_especifica(std::ostream& os) const{os << tam_ << " MB, " << num_ejemplares_ << " unidades.";}
+	void impresion_especifica(std::ostream& os) const{os << tam_ << " MB, " << stock_ << " unidades.";}
 
 private:
 	const unsigned tam_;

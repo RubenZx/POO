@@ -2,12 +2,6 @@
 #include "pedido-articulo.hpp"
 #include "usuario-pedido.hpp"
 
-// RTTI
-/*
-	static  -> durante la compilación
-	dynamic -> durante la ejecución
-*/
-
 int Pedido::N_pedidos = 0; 	//contador de pedidos
 
 // Constructor de pedido.
@@ -58,14 +52,7 @@ Pedido::Pedido(Usuario_Pedido& us_pe, Pedido_Articulo& pe_art, Usuario& u, const
 	++N_pedidos;
 }
 
-/* Sobrecargar del operador de insercción de flujo.
--> FORMATO
----------------------------------------------------
-Núm. pedido: 1
-Fecha: jueves 10 de marzo de 2016
-Pagado con: VISA n.o: 4539451203987356
-Importe: 149,95 €
-*/
+// Sobrecargar del operador de insercción de flujo.
 std::ostream& operator <<(std::ostream& os, const Pedido& ped)
 {
   	os 	<< "Núm. pedido: " << ped.numero() 
