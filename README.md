@@ -1,2 +1,2 @@
-# POO
-Prácticas de POO 2017/18 (ESI-UCA)
+# Object-oriented programming
+OOP practices for the university
